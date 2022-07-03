@@ -1,6 +1,7 @@
 import { IsDate, IsEnum, IsNumber } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { Column, Entity } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
+import { Column, Entity, ManyToOne } from 'typeorm';
 
 export enum OrderStatus {
   Pending = 'Pending',
@@ -39,4 +40,25 @@ export class Order extends CoreEntity {
   @Column({ type: 'datetime' })
   @IsDate()
   deliveredAt: Date;
+
+  @ManyToOne(() => User, (user) => user.orders, {
+    onDelete: 'SET NULL',
+    nullable: true,
+    eager: true,
+  })
+  customer?: User;
+
+  @ManyToOne(() => User, (user) => user.delivers, {
+    onDelete: 'SET NULL',
+    nullable: true,
+    eager: true,
+  })
+  delivery?: User;
+
+  @ManyToOne(() => User, (user) => user.sells, {
+    onDelete: 'SET NULL',
+    nullable: true,
+    eager: true,
+  })
+  business?: User;
 }
